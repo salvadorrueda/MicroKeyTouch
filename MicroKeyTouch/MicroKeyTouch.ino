@@ -85,10 +85,62 @@ void logo(uint16_t color){
   tft.drawBitmap(dx, dy, estrek, w, h, color);   
 }
 
+void digit8(uint16_t x0, uint16_t y0, uint16_t w, uint16_t h, uint16_t c){
+  // Write 8 digit segments on screen
+  //
+  //      d3
+  //       _
+  //  d2  |_|  d4 __
+  //  d1  |_|  d5   \ d6
+  //  
+  //      d0
+
+  uint16_t r = h/2;
+  
+  //  d6  _
+  //     |.|   
+  //     |_|     
+  tft.drawRoundRect(x0+h, y0+w, w, h, r, c);
+  
+  //  d5  _
+  //     |_|  
+  //     |_.    
+  tft.drawRoundRect(x0+w+h, y0+r+w, h, w, r, c);
+
+  //  d4  _
+  //     |_.  
+  //     |_|    
+  tft.drawRoundRect(x0+w+h, y0+r, h, w, r, c);
+
+  //  d3  .
+  //     |_|   
+  //     |_|   
+  tft.drawRoundRect(x0+h, y0, w, h, r, c);
+
+  //  d2  _
+  //     ._|  
+  //     |_|    
+  tft.drawRoundRect(x0, y0+r, h, w, r, c);
+
+  //  d1  _
+  //     |_|   
+  //     ._|  
+  tft.drawRoundRect(x0, y0+r+w, h, w, r, c);
+  
+  //  d0  _
+  //     |_|   
+  //     |.|     
+  tft.drawRoundRect(x0+h, y0+w+w, w, h, r, c);
+ 
+}
+
+
 void block_screen(){
 
   logo(RED);
 
+  digit8(50,70,100,20,WHITE);
+  
   tft.setTextSize(2);
   tft.setTextColor(RED);
   tft.setCursor((tft.width() - 48) / 2, (tft.height() * 2) / 4);
