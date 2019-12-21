@@ -11,12 +11,26 @@ MCUFRIEND_kbv tft;       // hard-wired for UNO shields anyway.
 #include "Keyboard.h" // Arduino Leonardo 
 #include "bitmap_strek.h"
 
+/*
 char *name = "BGood.";  //edit name of shield
-//const int XP=6,XM=A2,YP=A1,YM=7; //ID=0x9341
-//const int TS_LEFT=907,TS_RT=136,TS_TOP=942,TS_BOT=139;
-
 const int XP=7,XM=A1,YP=A2,YM=6; //240x320 ID=0x9329
 const int TS_LEFT=895,TS_RT=153,TS_TOP=87,TS_BOT=905;
+const int TS_MINX=87,TS_MAXX=905,TS_MINY=153,TS_MAXY=895;
+*/
+
+char *name = "BGood";  //edit name of shield
+const int XP=7,XM=A1,YP=A2,YM=6; //240x320 ID=0x9329
+const int TS_LEFT=871,TS_RT=177,TS_TOP=96,TS_BOT=884;
+const int TS_MINX=87,TS_MAXX=905,TS_MINY=157,TS_MAXY=895;
+
+
+/*
+char *name = "Elegoo.";  //edit name of shield
+const int XP=8,XM=A2,YP=A3,YM=9; //240x320 ID=0x9329
+const int TS_LEFT=895,TS_RT=157,TS_TOP=87,TS_BOT=905;
+const int TS_MINX=87,TS_MAXX=905,TS_MINY=157,TS_MAXY=895;
+
+*/
 
 TouchScreen ts = TouchScreen(XP, YP, XM, YM, 300);
 TSPoint tp;
@@ -134,11 +148,14 @@ void digit8(uint16_t x0, uint16_t y0, uint16_t w, uint16_t h, uint16_t c){
  
 }
 
+void paint(){
+  
+}
 
 void block_screen(){
-
+ 
   logo(RED);
-
+ 
   digit8(50,70,100,20,WHITE);
   
   tft.setTextSize(2);
@@ -157,7 +174,11 @@ void block_screen(){
     if (tp.z < MINPRESSURE || tp.z > MAXPRESSURE) continue;
     if (tp.x > 450 && tp.x < 570  && tp.y > 450 && tp.y < 570) blocked = false;
     tft.setCursor(0, (tft.height() * 3) / 4);
-    tft.print("tp.x=" + String(tp.x) + " tp.y=" + String(tp.y) + "   ");    
+    tft.print("tp.x=" + String(tp.x) + " tp.y=" + String(tp.y) + "   ");
+
+    tp.x = map(tp.x, TS_MAXX, TS_MINX, 0, tft.width());
+    tp.y = map(tp.y, TS_MINY, TS_MAXY, 0, tft.height());    
+    tft.fillCircle(tp.x, tp.y, 10, GREEN);
   }
 
   tft.print(F("unlocked"));
