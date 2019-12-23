@@ -167,7 +167,8 @@ int ckeypad(uint16_t x0, uint16_t y0, uint16_t r, uint16_t c){
     tft.fillCircle(tp.x, tp.y, 10, GREEN);
 
     // Delete the number printing it in black 
-    tft.setCursor(0, (tft.height() * 3) / 4);
+    //tft.setCursor(0, (tft.height() * 3) / 4);
+    tft.setCursor(0, (tft.height()-60));
     tft.setTextColor(BLACK);
     tft.print(n);
 
@@ -185,9 +186,11 @@ int ckeypad(uint16_t x0, uint16_t y0, uint16_t r, uint16_t c){
 
     
     //Print the number
-    tft.setCursor(0, (tft.height() * 3) / 4);
+    //tft.setCursor(0, (tft.height() * 3) / 4);
+    tft.setCursor(0, (tft.height()-60));
+    tft.setTextSize(2);
     tft.setTextColor(RED);
-    tft.print(n);
+    tft.println(n);
     blocked = false;
     
   }
@@ -196,42 +199,32 @@ int ckeypad(uint16_t x0, uint16_t y0, uint16_t r, uint16_t c){
 
 void block_screen(){
   int n; // number touched on cKeypad.
+  int password = 1234;
+  int ipassword = 0; // incomming password
+  int i=0; // index for ipassword.
   
   logo(RED);
  
   // digit8(50,70,100,20,WHITE);
-  while (ckeypad(60,100,30,WHITE) != 3);
-/*
-  tft.setTextSize(2);
-  tft.setTextColor(RED);
-  tft.setCursor((tft.width() - 48) / 2, (tft.height() * 2) / 4);
-  tft.print("UNLOCK");
-  tft.setTextColor(YELLOW, BLACK);
-  tft.setCursor(0, (tft.height() * 6) / 8);
-  tft.print("Touch screen for loc");
-     
-  while(blocked){
-    tp = ts.getPoint();
-    pinMode(XM, OUTPUT);
-    pinMode(YP, OUTPUT);
  
-    if (tp.z < MINPRESSURE || tp.z > MAXPRESSURE) continue;
-    if (tp.x > 450 && tp.x < 570  && tp.y > 450 && tp.y < 570) blocked = false;
+  do{
+    
+    tft.setCursor(0, (tft.height()-60));
+    tft.setTextSize(2);
+    tft.setTextColor(BLACK);
+    tft.println();
+    tft.print(ipassword);
+    ipassword=0;
 
-    n=1;
-    tft.setCursor(0, (tft.height() * 3) / 4);
-    tft.print("tp.x=" + String(tp.x) + " tp.y=" + String(tp.y) + " n:"+n);
-
-    tp.x = map(tp.x, TS_MAXX, TS_MINX, 0, tft.width());
-    tp.y = map(tp.y, TS_MINY, TS_MAXY, 0, tft.height());    
-    tft.fillCircle(tp.x, tp.y, 10, GREEN);
-
-    tft.print("tp.x=" + String(tp.x) + " tp.y=" + String(tp.y) + " n:"+n);
-
-  }
-
-  tft.print(F("unlocked"));
-*/
+    for (i=0;i<4;i++){
+      ipassword=ipassword*10+ckeypad(60,100,30,WHITE);  
+      
+       tft.setTextSize(2);
+       tft.setTextColor(RED);
+       tft.print(ipassword);
+    }
+  }while (ipassword!=password); 
+  
 }
 
 
