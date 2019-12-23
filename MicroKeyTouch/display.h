@@ -120,8 +120,10 @@ void digit8(uint16_t x0, uint16_t y0, uint16_t w, uint16_t h, uint16_t c){
  
 }
 
-void ckeypad(uint16_t x0, uint16_t y0, uint16_t r, uint16_t c){
-
+int ckeypad(uint16_t x0, uint16_t y0, uint16_t r, uint16_t c){
+  // return the selected number.
+  
+  blocked = true;
   // O O O
   // O O O
   // O O O
@@ -154,7 +156,7 @@ void ckeypad(uint16_t x0, uint16_t y0, uint16_t r, uint16_t c){
     pinMode(YP, OUTPUT);
  
     if (tp.z < MINPRESSURE || tp.z > MAXPRESSURE) continue;
-    if (tp.x > 450 && tp.x < 570  && tp.y > 450 && tp.y < 570) blocked = false;
+   // if (tp.x > 450 && tp.x < 570  && tp.y > 450 && tp.y < 570) blocked = false;
 
     
     //tft.setCursor(0, (tft.height() * 3) / 4);
@@ -186,9 +188,10 @@ void ckeypad(uint16_t x0, uint16_t y0, uint16_t r, uint16_t c){
     tft.setCursor(0, (tft.height() * 3) / 4);
     tft.setTextColor(RED);
     tft.print(n);
-
+    blocked = false;
+    
   }
-  
+  return n;
 }
 
 void block_screen(){
@@ -197,8 +200,8 @@ void block_screen(){
   logo(RED);
  
   // digit8(50,70,100,20,WHITE);
-  ckeypad(60,100,30,WHITE);
-  
+  while (ckeypad(60,100,30,WHITE) != 3);
+/*
   tft.setTextSize(2);
   tft.setTextColor(RED);
   tft.setCursor((tft.width() - 48) / 2, (tft.height() * 2) / 4);
@@ -228,6 +231,7 @@ void block_screen(){
   }
 
   tft.print(F("unlocked"));
+*/
 }
 
 
