@@ -25,6 +25,8 @@ const uint16_t WHITE = 0xFFFF;
 uint16_t ID;
 uint8_t Orientation = 0;    //PORTRAIT
 
+
+
 void tft_setup(){
   
   tft.reset();
@@ -253,12 +255,85 @@ void block_screen(){
 }
 
 
+unsigned getCode(){
+// Return 4 digit code
+  
+  int n;      // number touched on cKeypad.
+  int c = 0;  // c is the counter to avoid overflow the unsigned int. 
+
+  unsigned int code = 0;
+//  logo(RED);
+    
+    n = ckeypad(60,100,30,WHITE);
+    c = 0;    // c is the counter to avoid overflow the unsigned int. 
+    
+    while(n != 10 && c<4){  // 10 is the key number to send the code. 
+      
+      tft.setCursor(0, (tft.height()-60));
+      tft.setTextSize(2);
+      tft.setTextColor(BLACK);
+      tft.print(code);
+
+      code=code*10+n;
+      
+      tft.setCursor(0, (tft.height()-60));
+      tft.setTextSize(2);
+      tft.setTextColor(RED);
+      tft.print(code);
+
+      n = ckeypad(60,100,30,WHITE);
+      c ++;
+    }
+
+    tft.setCursor(0, (tft.height()-60));
+    tft.setTextSize(2);
+    tft.setTextColor(BLACK);
+    tft.print(code);
+    
+    return code;
+}
+
+
+
+void button_one(){
+  tft.setTextSize(2);
+  tft.setTextColor(RED);
+  tft.setCursor((tft.width() - 48) / 2, (tft.height() * 2) / 4);
+  tft.print("EXIT");
+  
+}
+
+void touch_one(){
+ boolean touched = false;
+ while(!touched){
+    tp = ts.getPoint();
+    pinMode(XM, OUTPUT);
+    pinMode(YP, OUTPUT);
+ 
+    if (tp.z < MINPRESSURE || tp.z > MAXPRESSURE) continue;
+    // EXIT button_exit();
+    if (tp.x > 450 && tp.x < 570  && tp.y > 450 && tp.y < 570) touched = true;
+    // button() 
+    //if (tp.x > 450 && tp.x < 870  && tp.y > 750 && tp.y < 845){
+    //Keyboard.println("Your text here"); 
+    //delay(1000);   
+    }   
+}    
+
+void one(){
+  tft.fillScreen(BLACK);
+  logo(GREEN);
+  button_one();
+  touch_one();
+}
+
+
 void screen(){
   logo(YELLOW);
   button_exit();
-  button();
-  
+  button();  
 }
+
 
 void touch(){
  while(!blocked){

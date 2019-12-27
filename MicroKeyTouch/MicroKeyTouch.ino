@@ -50,28 +50,35 @@ boolean blocked = true;
 //uint8_t Orientation = 0;    //PORTRAIT
 
 
-boolean login(){
-  
-  block_screen();
-  return true;
-}
-
-
 void setup(void){
   uint16_t tmp;
   
   tft_setup();
 }
 
-void loop()
-{
+
+void loop(){
+  
+ unsigned int code = 0;
+ unsigned int password = 1234;
+  
  tft.fillScreen(BLACK);
+ logo(RED);
+ // wait for a code then show the corresponding screen  
+
+ code = getCode();
+
+ switch(code){
+
+ case 1: one(); break;
  
- if(login()){
+  
+ default: if(code == password){
     tft.fillScreen(BLACK);
     screen();
     touch();
-  }else{
-    // Error login()
-  }
+   }
+   break;
+ }
+   
 }
