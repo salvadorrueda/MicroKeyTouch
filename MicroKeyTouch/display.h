@@ -127,12 +127,12 @@ int ckeypad(uint16_t x0, uint16_t y0, uint16_t r, uint16_t c){
   // O O O
   // O O O
   // O O O
-  //   O
+  //   O [O] 
 
   // 1 2 3
   // 4 5 6
   // 7 8 9
-  //   0
+  //   0 [] // 
   
   int n; // number touched on cKeypad.
   
@@ -152,6 +152,8 @@ int ckeypad(uint16_t x0, uint16_t y0, uint16_t r, uint16_t c){
   tft.drawCircle(x0+4*r,y0,r,c);    // 3
   tft.drawCircle(x0+4*r,y0+2*r,r,c);// 6
   tft.drawCircle(x0+4*r,y0+4*r,r,c);// 9
+  tft.fillCircle(x0+4*r,y0+6*r,r,c);// . // 10
+
 
 
   while(blocked){
@@ -172,9 +174,9 @@ int ckeypad(uint16_t x0, uint16_t y0, uint16_t r, uint16_t c){
 
     // Delete the number printing it in black 
     //tft.setCursor(0, (tft.height() * 3) / 4);
-    tft.setCursor(0, (tft.height()-60));
-    tft.setTextColor(BLACK);
-    tft.print(n);
+    //tft.setCursor(0, (tft.height()-60));
+    // tft.setTextColor(BLACK);
+    //tft.print(n);
 
     if (tp.x > x0-r && tp.x < x0+r && tp.y > y0-r && tp.y < y0+r) n = 1;     
     if (tp.x > x0+r && tp.x < x0+3*r && tp.y > y0-r && tp.y < y0+r) n = 2; 
@@ -189,15 +191,17 @@ int ckeypad(uint16_t x0, uint16_t y0, uint16_t r, uint16_t c){
     if (tp.x > x0+3*r && tp.x < x0+5*r && tp.y > y0+3*r && tp.y < y0+5*r) n = 9;
 
     if (tp.x > x0+r && tp.x < x0+3*r && tp.y > y0+5*r && tp.y < y0+7*r) n = 0; 
-    
+    if (tp.x > x0+3*r && tp.x < x0+5*r && tp.y > y0+5*r && tp.y < y0+7*r) n = 10; 
+
 
     
     //Print the number
     //tft.setCursor(0, (tft.height() * 3) / 4);
-    tft.setCursor(0, (tft.height()-60));
-    tft.setTextSize(2);
-    tft.setTextColor(RED);
-    tft.println(n);
+    //tft.setCursor(0, (tft.height()-60));
+    //tft.setTextSize(2);
+    //tft.setTextColor(RED);
+    //tft.println(n);
+    
     blocked = false;
     
   }
@@ -206,9 +210,10 @@ int ckeypad(uint16_t x0, uint16_t y0, uint16_t r, uint16_t c){
 
 void block_screen(){
   int n; // number touched on cKeypad.
-  int password = 1234;
-  int ipassword = 0; // incomming password
-  int i=0; // index for ipassword.
+  unsigned int password = 1234;
+  unsigned int ipassword = 0; // incomming password
+  //int i=0; // index for ipassword.
+  int c = 0;    // c is the counter to avoid overflow the unsigned int. 
   
   logo(RED);
  
@@ -216,20 +221,33 @@ void block_screen(){
  
   do{
     
+    ipassword=0;
+    n = ckeypad(60,100,30,WHITE);
+    c = 0;    // c is the counter to avoid overflow the unsigned int. 
+    
+    while(n != 10 && c<4){  // 10 is the key number to send the code. 
+      
+      tft.setCursor(0, (tft.height()-60));
+      tft.setTextSize(2);
+      tft.setTextColor(BLACK);
+      tft.print(ipassword);
+
+      ipassword=ipassword*10+n;
+      
+      tft.setCursor(0, (tft.height()-60));
+      tft.setTextSize(2);
+      tft.setTextColor(RED);
+      tft.print(ipassword);
+
+      n = ckeypad(60,100,30,WHITE);
+      c ++;
+    }
+
     tft.setCursor(0, (tft.height()-60));
     tft.setTextSize(2);
     tft.setTextColor(BLACK);
-    tft.println();
     tft.print(ipassword);
-    ipassword=0;
 
-    for (i=0;i<4;i++){
-      ipassword=ipassword*10+ckeypad(60,100,30,WHITE);  
-      
-       tft.setTextSize(2);
-       tft.setTextColor(RED);
-       tft.print(ipassword);
-    }
   }while (ipassword!=password); 
   
 }
