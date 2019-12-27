@@ -127,11 +127,13 @@ int ckeypad(uint16_t x0, uint16_t y0, uint16_t r, uint16_t c){
   // O O O
   // O O O
   // O O O
+  //   O
 
   // 1 2 3
   // 4 5 6
   // 7 8 9
-
+  //   0
+  
   int n; // number touched on cKeypad.
   
   //1rst col 
@@ -143,6 +145,8 @@ int ckeypad(uint16_t x0, uint16_t y0, uint16_t r, uint16_t c){
   tft.drawCircle(x0+2*r,y0,r,c);    // 2
   tft.drawCircle(x0+2*r,y0+2*r,r,c);// 5
   tft.drawCircle(x0+2*r,y0+4*r,r,c);// 8
+  tft.drawCircle(x0+2*r,y0+6*r,r,c);// 0
+  
 
   //3rd Col
   tft.drawCircle(x0+4*r,y0,r,c);    // 3
@@ -183,6 +187,9 @@ int ckeypad(uint16_t x0, uint16_t y0, uint16_t r, uint16_t c){
     if (tp.x > x0-r && tp.x < x0+r && tp.y > y0+3*r && tp.y < y0+5*r) n = 7;     
     if (tp.x > x0+r && tp.x < x0+3*r && tp.y > y0+3*r && tp.y < y0+5*r) n = 8; 
     if (tp.x > x0+3*r && tp.x < x0+5*r && tp.y > y0+3*r && tp.y < y0+5*r) n = 9;
+
+    if (tp.x > x0+r && tp.x < x0+3*r && tp.y > y0+5*r && tp.y < y0+7*r) n = 0; 
+    
 
     
     //Print the number
