@@ -307,6 +307,13 @@ void button_one(){
   tft.print("EXIT");
 
   tft.drawCircle(x0,y0,r,c);    //  1
+
+  tft.setTextSize(2);
+  tft.setTextColor(WHITE);
+  tft.setCursor(100,80);
+  tft.println("Salvador");
+  tft.setCursor(100,100);
+  tft.println("Rueda Pau");
   
 }
 
