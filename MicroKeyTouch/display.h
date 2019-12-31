@@ -296,15 +296,28 @@ unsigned getCode(){
 
 
 void button_one(){
+  uint16_t x0 = 60; 
+  uint16_t y0 = 100; 
+  uint16_t r = 30; 
+  uint16_t c = WHITE;
+  
   tft.setTextSize(2);
   tft.setTextColor(RED);
   tft.setCursor((tft.width() - 48) / 2, (tft.height() * 2) / 4);
   tft.print("EXIT");
+
+  tft.drawCircle(x0,y0,r,c);    //  1
   
 }
 
 void touch_one(){
- boolean touched = false;
+ boolean touched = false; // touch exit.
+ 
+  uint16_t x0 = 60; 
+  uint16_t y0 = 100; 
+  uint16_t r = 30; 
+  uint16_t c = WHITE;
+ 
  while(!touched){
     tp = ts.getPoint();
     pinMode(XM, OUTPUT);
@@ -314,10 +327,26 @@ void touch_one(){
     // EXIT button_exit();
     if (tp.x > 450 && tp.x < 570  && tp.y > 450 && tp.y < 570) touched = true;
     // button() 
-    //if (tp.x > 450 && tp.x < 870  && tp.y > 750 && tp.y < 845){
-    //Keyboard.println("Your text here"); 
-    //delay(1000);   
+
+
+    tp.x = map(tp.x, TS_MAXX, TS_MINX, 0, tft.width());
+    tp.y = map(tp.y, TS_MINY, TS_MAXY, 0, tft.height());    
+    tft.fillCircle(tp.x, tp.y, 10, GREEN);
+    
+    if (tp.x > x0-r && tp.x < x0+r && tp.y > y0-r && tp.y < y0+r){  
+      Keyboard.println("Salvador Rueda Pau"); 
+      Keyboard.print("salvador.rueda");  //salvador.rueda@gmail.com
+      //KEY_LEFT_ALT
+      Keyboard.press(KEY_RIGHT_ALT);
+      Keyboard.press('2');
+      delay(100);
+      Keyboard.releaseAll();
+      Keyboard.print("gmail.com"); 
+
+      }      
+   
     }   
+    
 }    
 
 void one(){
