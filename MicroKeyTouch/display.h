@@ -422,7 +422,7 @@ void touch(){
     if (tp.x > 450 && tp.x < 570  && tp.y > 450 && tp.y < 570) blocked = true;
     // button() 
     if (tp.x > 450 && tp.x < 870  && tp.y > 750 && tp.y < 845){
-    Keyboard.println("Testing ssh keys"); 
+    Keyboard.println("Testing"); 
     delay(1000);   
     }   
   }  
