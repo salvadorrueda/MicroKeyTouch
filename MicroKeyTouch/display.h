@@ -34,9 +34,8 @@ void tft_setup(){
   tft.begin(ID);
   tft.setRotation(Orientation);
   tft.fillScreen(BLACK);
+
 }
-
-
 
 
 void button(){
@@ -122,6 +121,15 @@ void digit8(uint16_t x0, uint16_t y0, uint16_t w, uint16_t h, uint16_t c){
  
 }
 
+void textckeypad(uint16_t x0, uint16_t y0, uint16_t c, char t){
+  // prints c char into the keypad circle.
+   
+      tft.setCursor(x0-6,y0-8);
+      tft.setTextSize(2);
+      tft.setTextColor(c);
+      tft.print(t);
+}
+
 int ckeypad(uint16_t x0, uint16_t y0, uint16_t r, uint16_t c){
   // return the selected number.
   
@@ -135,26 +143,51 @@ int ckeypad(uint16_t x0, uint16_t y0, uint16_t r, uint16_t c){
   // 4 5 6
   // 7 8 9
   //   0 [] // 
+
+  char cs[]="0123456789";
+  //strcpy(cs,"^abcdefghi");
+  //strcpy(cs,"^ABCDEFGJI");
   
   int n; // number touched on cKeypad.
   
   //1rst col 
   tft.drawCircle(x0,y0,r,c);    //  1
+  textckeypad(x0,y0,c,cs[1]);
+
   tft.drawCircle(x0,y0+2*r,r,c);//  4
+  textckeypad(x0,y0+2*r,c,cs[4]);
+
   tft.drawCircle(x0,y0+4*r,r,c);//  7
-  
+  textckeypad(x0,y0+4*r,c,cs[7]);
+
+
   //2on col
   tft.drawCircle(x0+2*r,y0,r,c);    // 2
+  textckeypad(x0+2*r,y0,c,cs[2]);
+
   tft.drawCircle(x0+2*r,y0+2*r,r,c);// 5
+  textckeypad(x0+2*r,y0+2*r,c,cs[5]);
+    
   tft.drawCircle(x0+2*r,y0+4*r,r,c);// 8
+  textckeypad(x0+2*r,y0+4*r,c,cs[8]);
+    
   tft.drawCircle(x0+2*r,y0+6*r,r,c);// 0
+  textckeypad(x0+2*r,y0+6*r,c,cs[0]);
+    
   
 
   //3rd Col
   tft.drawCircle(x0+4*r,y0,r,c);    // 3
+  textckeypad(x0+4*r,y0,c,cs[3]);
+    
   tft.drawCircle(x0+4*r,y0+2*r,r,c);// 6
+  textckeypad(x0+4*r,y0+2*r,c,cs[6]);
+    
   tft.drawCircle(x0+4*r,y0+4*r,r,c);// 9
+  textckeypad(x0+4*r,y0+4*r,c,cs[9]);
+    
   tft.fillCircle(x0+4*r,y0+6*r,r,c);// . // 10
+  //textckeypad(x0+4*r,y0+6*r,c,cs[?]);
 
 
 
@@ -170,10 +203,16 @@ int ckeypad(uint16_t x0, uint16_t y0, uint16_t r, uint16_t c){
     //tft.setCursor(0, (tft.height() * 3) / 4);
     //tft.print("tp.x=" + String(tp.x) + " tp.y=" + String(tp.y) + " n:"+n);
 
+   // Bgood Configuration
     tp.x = map(tp.x, TS_MAXX, TS_MINX, 0, tft.width());
-    tp.y = map(tp.y, TS_MINY, TS_MAXY, 0, tft.height());    
+    tp.y = map(tp.y, TS_MINY, TS_MAXY, 0, tft.height());
     tft.fillCircle(tp.x, tp.y, 10, GREEN);
-
+  
+   // MM Configuration
+   // tp.x = map(tp.x, TS_MAXX, TS_MINX, 0, tft.height());
+   // tp.y = map(tp.y, TS_MINY, TS_MAXY, 0, tft.width());   
+   // tft.fillCircle(tp.y, tp.x, 10, GREEN);
+    
     // Delete the number printing it in black 
     //tft.setCursor(0, (tft.height() * 3) / 4);
     //tft.setCursor(0, (tft.height()-60));
@@ -228,12 +267,12 @@ void block_screen(){
     c = 0;    // c is the counter to avoid overflow the unsigned int. 
     
     while(n != 10 && c<4){  // 10 is the key number to send the code. 
-      
+     /* 
       tft.setCursor(0, (tft.height()-60));
       tft.setTextSize(2);
       tft.setTextColor(BLACK);
       tft.print(ipassword);
-
+    */
       ipassword=ipassword*10+n;
       
       tft.setCursor(0, (tft.height()-60));
@@ -338,6 +377,7 @@ void touch_one(){
 
     tp.x = map(tp.x, TS_MAXX, TS_MINX, 0, tft.width());
     tp.y = map(tp.y, TS_MINY, TS_MAXY, 0, tft.height());    
+
     tft.fillCircle(tp.x, tp.y, 10, GREEN);
     
     if (tp.x > x0-r && tp.x < x0+r && tp.y > y0-r && tp.y < y0+r){  
@@ -382,7 +422,7 @@ void touch(){
     if (tp.x > 450 && tp.x < 570  && tp.y > 450 && tp.y < 570) blocked = true;
     // button() 
     if (tp.x > 450 && tp.x < 870  && tp.y > 750 && tp.y < 845){
-    Keyboard.println("Your text here"); 
+    Keyboard.println("Password"); 
     delay(1000);   
     }   
   }  
