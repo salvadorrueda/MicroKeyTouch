@@ -130,10 +130,12 @@ void textckeypad(uint16_t x0, uint16_t y0, uint16_t c, char t){
       tft.print(t);
 }
 
-int ckeypad(uint16_t x0, uint16_t y0, uint16_t r, uint16_t c){
-  // return the selected number.
+int ckeypad(uint16_t x0, uint16_t y0, uint16_t r, uint16_t c, int l, boolean blocked){ 
   
-  blocked = true;
+  // l layout abc -> 123
+  // return the selected number if blocked.
+  
+ // blocked = true;
   // O O O
   // O O O
   // O O O
@@ -145,12 +147,19 @@ int ckeypad(uint16_t x0, uint16_t y0, uint16_t r, uint16_t c){
   //   0 [] // 
 
   char cs[]="0123456789";
+  switch (l){
+    case 0: strcpy(cs,"0123456789");break;
+    case 1: strcpy(cs,"^abcdefghi"); break;
+    case 2: strcpy(cs,"^jklmnopqr"); break; 
+    case 3: strcpy(cs,"^stuvwxyz."); break;     
+  }
   //strcpy(cs,"^abcdefghi");
   //strcpy(cs,"^ABCDEFGJI");
   
   int n; // number touched on cKeypad.
   
   //1rst col 
+  
   tft.drawCircle(x0,y0,r,c);    //  1
   textckeypad(x0,y0,c,cs[1]);
 
@@ -159,6 +168,9 @@ int ckeypad(uint16_t x0, uint16_t y0, uint16_t r, uint16_t c){
 
   tft.drawCircle(x0,y0+4*r,r,c);//  7
   textckeypad(x0,y0+4*r,c,cs[7]);
+
+  tft.fillCircle(x0,y0+6*r,r,c);//  abc
+  textckeypad(x0,y0+6*r,BLACK,'a');
 
 
   //2on col
@@ -187,7 +199,7 @@ int ckeypad(uint16_t x0, uint16_t y0, uint16_t r, uint16_t c){
   textckeypad(x0+4*r,y0+4*r,c,cs[9]);
     
   tft.fillCircle(x0+4*r,y0+6*r,r,c);// . // 10
-  //textckeypad(x0+4*r,y0+6*r,c,cs[?]);
+  textckeypad(x0+4*r,y0+6*r,BLACK,'#');
 
 
 
@@ -230,7 +242,8 @@ int ckeypad(uint16_t x0, uint16_t y0, uint16_t r, uint16_t c){
     if (tp.x > x0-r && tp.x < x0+r && tp.y > y0+3*r && tp.y < y0+5*r) n = 7;     
     if (tp.x > x0+r && tp.x < x0+3*r && tp.y > y0+3*r && tp.y < y0+5*r) n = 8; 
     if (tp.x > x0+3*r && tp.x < x0+5*r && tp.y > y0+3*r && tp.y < y0+5*r) n = 9;
-
+ 
+    if (tp.x > x0-r && tp.x < x0+r && tp.y > y0+5*r && tp.y < y0+7*r) n = 11;     
     if (tp.x > x0+r && tp.x < x0+3*r && tp.y > y0+5*r && tp.y < y0+7*r) n = 0; 
     if (tp.x > x0+3*r && tp.x < x0+5*r && tp.y > y0+5*r && tp.y < y0+7*r) n = 10; 
 
@@ -249,12 +262,14 @@ int ckeypad(uint16_t x0, uint16_t y0, uint16_t r, uint16_t c){
   return n;
 }
 
+/*
 void block_screen(){
   int n; // number touched on cKeypad.
   unsigned int password = 1234;
   unsigned int ipassword = 0; // incomming password
   //int i=0; // index for ipassword.
-  int c = 0;    // c is the counter to avoid overflow the unsigned int. 
+  int c = 0; // c is the counter to avoid overflow the unsigned int. 
+  int l = 0; // l layout 123 -> abc
   
   logo(RED);
  
@@ -263,16 +278,15 @@ void block_screen(){
   do{
     
     ipassword=0;
-    n = ckeypad(60,100,30,WHITE);
+    blocked = true;
+    n = ckeypad(60,100,30,WHITE,l, blocked);
     c = 0;    // c is the counter to avoid overflow the unsigned int. 
     
     while(n != 10 && c<4){  // 10 is the key number to send the code. 
-     /* 
-      tft.setCursor(0, (tft.height()-60));
-      tft.setTextSize(2);
-      tft.setTextColor(BLACK);
-      tft.print(ipassword);
-    */
+      if(n==11){            // 11 is the key changing 123 -> abc
+         l++;
+         l=l%4;  // 4 . number of layout. 
+      }else{
       ipassword=ipassword*10+n;
       
       tft.setCursor(0, (tft.height()-60));
@@ -280,8 +294,10 @@ void block_screen(){
       tft.setTextColor(RED);
       tft.print(ipassword);
 
-      n = ckeypad(60,100,30,WHITE);
       c ++;
+     }
+     blocked = true; 
+     n = ckeypad(60,100,30,WHITE,l,blocked);
     }
 
     tft.setCursor(0, (tft.height()-60));
@@ -292,21 +308,29 @@ void block_screen(){
   }while (ipassword!=password); 
   
 }
-
+*/
 
 unsigned getCode(){
 // Return 4 digit code
   
   int n;      // number touched on cKeypad.
   int c = 0;  // c is the counter to avoid overflow the unsigned int. 
+  int l = 0; // l layout 123 -> abc
 
   unsigned int code = 0;
 //  logo(RED);
-    
-    n = ckeypad(60,100,30,WHITE);
+ 
+    blocked=true;
+    n = ckeypad(60,100,30,WHITE,l,blocked);
     c = 0;    // c is the counter to avoid overflow the unsigned int. 
     
     while(n != 10 && c<4){  // 10 is the key number to send the code. 
+      if(n==11){            // 11 is the key changing 123 -> abc
+         ckeypad(60,100,30,BLACK,l,false);
+         
+         l++;
+         l=l%4;  // 2 . number of layout. 
+      }else{
       
       tft.setCursor(0, (tft.height()-60));
       tft.setTextSize(2);
@@ -319,9 +343,10 @@ unsigned getCode(){
       tft.setTextSize(2);
       tft.setTextColor(RED);
       tft.print(code);
-
-      n = ckeypad(60,100,30,WHITE);
       c ++;
+      }
+      blocked=true;
+      n = ckeypad(60,100,30,WHITE,l,blocked);
     }
 
     tft.setCursor(0, (tft.height()-60));
@@ -339,6 +364,7 @@ void button_one(){
   uint16_t y0 = 100; 
   uint16_t r = 30; 
   uint16_t c = WHITE;
+
   
   tft.setTextSize(2);
   tft.setTextColor(RED);
@@ -353,6 +379,7 @@ void button_one(){
   tft.println("Salvador");
   tft.setCursor(100,100);
   tft.println("Rueda Pau");
+  
   
 }
 
@@ -412,17 +439,19 @@ void screen(){
 
 
 void touch(){
- while(!blocked){
+ boolean touched = false; // touch exit. 
+  
+ while(!touched){
     tp = ts.getPoint();
     pinMode(XM, OUTPUT);
     pinMode(YP, OUTPUT);
  
     if (tp.z < MINPRESSURE || tp.z > MAXPRESSURE) continue;
     // EXIT button_exit();
-    if (tp.x > 450 && tp.x < 570  && tp.y > 450 && tp.y < 570) blocked = true;
+    if (tp.x > 450 && tp.x < 570  && tp.y > 450 && tp.y < 570) touched = true;
     // button() 
     if (tp.x > 450 && tp.x < 870  && tp.y > 750 && tp.y < 845){
-    Keyboard.println("Testing"); 
+    Keyboard.println("letters"); 
     delay(1000);   
     }   
   }  
